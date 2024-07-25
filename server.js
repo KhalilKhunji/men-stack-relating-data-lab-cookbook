@@ -1,5 +1,4 @@
-const dotenv = require('dotenv');
-dotenv.config();
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
@@ -11,7 +10,7 @@ const authController = require('./controllers/auth.js');
 
 const port = process.env.PORT ? process.env.PORT : '3000';
 
-mongoose.connect(process.env.MONGODB_URI);
+mongoose.connect(process.env.DATABASE_URL);
 
 mongoose.connection.on('connected', () => {
   console.log(`Connected to MongoDB ${mongoose.connection.name}.`);
@@ -39,7 +38,7 @@ app.get('/vip-lounge', (req, res) => {
     res.send(`Welcome to the party ${req.session.user.username}.`);
   } else {
     res.send('Sorry, no guests allowed.');
-  }
+  };
 });
 
 app.use('/auth', authController);
