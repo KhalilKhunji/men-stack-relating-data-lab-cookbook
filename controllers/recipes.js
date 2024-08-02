@@ -3,6 +3,7 @@ const router = express.Router();
 
 const User = require('../models/user.js');
 const Recipe = require('../models/recipe.js');
+const Ingredient = require('../models/ingredient.js');
 
 router.get('/', async (req, res) => {
     const recipes = await Recipe.find();
@@ -10,17 +11,15 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/new', async (req, res) => {
-    res.render('recipes/new.ejs');
+    const ingredients = await Ingredient.find();
+    res.render('recipes/new.ejs', {ingredients});
 });
 
 router.post('/create', async (req, res) => {
     const currentUser = await User.findById(req.session.user._id);
     try {
-        const newRecipe = await Recipe.create(req.body);
-        console.log(newRecipe);
-        newRecipe.owner.push(currentUser._id);
-        console.log(newRecipe);
-        await newRecipe.save();
+        req.body.owner = currentUser._id;
+        await Recipe.create(req.body);
         res.redirect("/recipes");
     } catch (err) {
         console.log(err);
@@ -29,9 +28,15 @@ router.post('/create', async (req, res) => {
 });
 
 router.get('/:recipeId', async (req, res) => {
-    const currentRecipe = await Recipe.findById(req.params.recipeId);
-    res.render('show.ejs', {currentRecipe});
+    const recipe = await Recipe.findById(req.params.recipeId);
+    res.render('recipes/show.ejs', {recipe});
 });
+
+router.delete('/:recipeId', async (req, res) => {
+    await Recipe.findByIdAndDelete(req.params.recipeId);
+    res.redirect('/recipes');
+});
+
 
 
 module.exports = router;

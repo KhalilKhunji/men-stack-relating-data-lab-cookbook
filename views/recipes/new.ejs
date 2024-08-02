@@ -19,7 +19,9 @@
       <label for="ingredients">Ingredients:</label>
         <!-- ForEach loop to show options based on ingredients available-->
         <select id="ingredients" name="ingredients">
-          <option value="placeholder">Placeholder</option>
+          <% ingredients.forEach((ingredient) => { %>
+            <option value="<%= ingredient._id %>"><%= ingredient.name %></option>
+          <% }); %>
         </select>
 
       <button type="submit">Create Recipe</button>
