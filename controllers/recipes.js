@@ -17,7 +17,9 @@ router.post('/create', async (req, res) => {
     const currentUser = await User.findById(req.session.user._id);
     try {
         const newRecipe = await Recipe.create(req.body);
+        console.log(newRecipe);
         newRecipe.owner.push(currentUser._id);
+        console.log(newRecipe);
         await newRecipe.save();
         res.redirect("/recipes");
     } catch (err) {
@@ -25,5 +27,11 @@ router.post('/create', async (req, res) => {
         res.redirect("/");
     };
 });
+
+router.get('/:recipeId', async (req, res) => {
+    const currentRecipe = await Recipe.findById(req.params.recipeId);
+    res.render('show.ejs', {currentRecipe});
+});
+
 
 module.exports = router;

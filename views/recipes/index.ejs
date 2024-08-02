@@ -12,7 +12,7 @@
     <% if(recipes) { %>
     <ul>
         <% recipes.forEach((recipe)=> { %>
-            <li><%= recipe.name %></li> 
+            <li><a href="/recipes/<%= recipe._id %>"><%= recipe.name %></a></li> 
         <% }); %>
     </ul>
     <% } else { %>
